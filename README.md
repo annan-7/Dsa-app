@@ -1,7 +1,8 @@
 
 # DSA Visual
 
-![DSA Visual Banner]([https://i.imgur.com/placeholder.png](https://github.com/user-attachments/assets/0c942790-7737-4a58-bc20-9abf62618b71))
+<img width="1349" height="646" alt="image" src="https://github.com/user-attachments/assets/71f848cb-757a-4903-ab6a-7341972af663" />
+
 
 An interactive step-by-step visualization platform for Data Structures and Algorithms (DSA) patterns. Learn DSA by seeing algorithms in action with both brute force and optimized approaches.
 
