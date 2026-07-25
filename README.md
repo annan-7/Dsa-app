@@ -1,36 +1,80 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+
+# DSA Visual
+
+![DSA Visual Banner]([https://i.imgur.com/placeholder.png](https://github.com/user-attachments/assets/0c942790-7737-4a58-bc20-9abf62618b71))
+
+An interactive step-by-step visualization platform for Data Structures and Algorithms (DSA) patterns. Learn DSA by seeing algorithms in action with both brute force and optimized approaches.
+
+**Live Demo:** Soon if this reaches a good amount of stars on github id :annan-7
+
+##  Features
+
+- **Step-by-step algorithm visualization** with smooth animations
+- **Dual approach comparison** - see brute force vs optimized side-by-side
+- **Interactive controls** - play/pause, step through, adjust speed
+- **Rich visual feedback** - color-coded pointers, state changes, success/failure indicators
+- **Comprehensive DSA patterns** - Two Pointers, Sliding Window, Hash Maps, and more
+- **Mobile-responsive design** - works on all device sizes
+
+##  Tech Stack
+
+- **Framework**: Next.js 14 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Animations**: Framer Motion
+- **Icons**: Lucide React
+- **Type Safety**: Strict TypeScript configuration
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/annan-7/Dsa-app.git
+cd dsa-visual
+
+# Install dependencies
+npm install
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## How to Use
 
-## Learn More
+1. **Select a pattern** from the left sidebar (Two Pointers, Sliding Window, etc.)
+2. **Choose a problem** from the pattern list
+3. **Toggle between approaches** - Brute Force vs Optimized
+4. **Control the visualization**:
+   - Play/Pause button
+   - Step forward/backward
+   - Adjust speed (0.5x-2x)
+5. **Observe**:
+   - Array elements with moving pointers
+   - Code highlighting matching current step
+   - Real-time state updates
+   - Complexity analysis
 
-To learn more about Next.js, take a look at the following resources:
+## Contributing
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Contributions are welcome! To contribute:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes (`git commit -m 'Add some feature'`)
+4. Push to the branch (`git push origin feature/your-feature`)
+5. Open a Pull Request
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+**Made by Annan John for developers learning DSA**  
+*See the magic behind the algorithms*
