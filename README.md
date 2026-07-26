@@ -1,4 +1,3 @@
-
 # DSA Visual
 
 <img width="1349" height="646" alt="image" src="https://github.com/user-attachments/assets/71f848cb-757a-4903-ab6a-7341972af663" />
@@ -73,7 +72,7 @@ Contributions are welcome! To contribute:
 2. Create your feature branch (`git checkout -b feature/your-feature`)
 3. Commit your changes (`git commit -m 'Add some feature'`)
 4. Push to the branch (`git push origin feature/your-feature`)
-5. Open a Pull Request( i'll try to merge pull request as soon as posible, if it doesn't collide with existing code base, Happy coding) 
+5. Open a Pull Request( i'll try to merge pull request as soon as posible, if it doesn't collide with existing code base, Happy coding!) 
 
 ---
 
