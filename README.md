@@ -5,7 +5,7 @@
 
 An interactive step-by-step visualization platform for Data Structures and Algorithms (DSA) patterns. Learn DSA by seeing algorithms in action with both brute force and optimized approaches.
 
-**Live Demo:** Soon if this reaches a good amount of stars on github id :annan-7
+**Live Demo:** : https://dsa-visualize-gu4j.onrender.com/
 
 ##  Features
 
