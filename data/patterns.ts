@@ -1,11 +1,15 @@
 import type { PatternDefinition } from "@/libs/types";
 import { containerWithMostWaterProblem } from "@/data/problems/container-with-most-water";
+import { containsDuplicateProblem } from "@/data/problems/contains-duplicate";
 import { longestSubstringWithoutRepeatingCharactersProblem } from "@/data/problems/longest-substring-without-repeating-characters";
+import { longestRepeatingCharacterReplacementProblem } from "@/data/problems/longest-repeating-character-replacement";
 import { minimumWindowSubstringProblem } from "@/data/problems/minimum-window-substring";
 import { productOfArrayExceptSelfProblem } from "@/data/problems/product-of-array-except-self";
+import { searchInsertPositionProblem } from "@/data/problems/search-insert-position";
 import { threeSumProblem } from "@/data/problems/three-sum";
 import { twoSumIIProblem } from "@/data/problems/two-sum-ii";
 import { twoSumProblem } from "@/data/problems/two-sum";
+import { validAnagramProblem } from "@/data/problems/valid-anagram";
 import { validPalindromeProblem } from "@/data/problems/valid-palindrome";
 import { validParenthesesProblem } from "@/data/problems/valid-parentheses";
 
@@ -40,10 +44,16 @@ export const patterns: PatternDefinition[] = [
         available: true,
       },
       {
-        slug: "container-with-most-water",
-        title: "Container With Most Water",
-        description: "Maximize area with two boundary pointers.",
-        available: false,
+        slug: containsDuplicateProblem.problemSlug,
+        title: containsDuplicateProblem.title,
+        description: containsDuplicateProblem.description,
+        available: true,
+      },
+      {
+        slug: validAnagramProblem.problemSlug,
+        title: validAnagramProblem.title,
+        description: validAnagramProblem.description,
+        available: true,
       },
     ],
   },
@@ -62,6 +72,12 @@ export const patterns: PatternDefinition[] = [
         slug: minimumWindowSubstringProblem.problemSlug,
         title: minimumWindowSubstringProblem.title,
         description: minimumWindowSubstringProblem.description,
+        available: true,
+      },
+      {
+        slug: longestRepeatingCharacterReplacementProblem.problemSlug,
+        title: longestRepeatingCharacterReplacementProblem.title,
+        description: longestRepeatingCharacterReplacementProblem.description,
         available: true,
       },
     ],
@@ -104,10 +120,10 @@ export const patterns: PatternDefinition[] = [
     description: "Cut the search interval in half each step.",
     problems: [
       {
-        slug: "search-insert-position",
-        title: "Search Insert Position",
-        description: "Locate the insertion point in a sorted array.",
-        available: false,
+        slug: searchInsertPositionProblem.problemSlug,
+        title: searchInsertPositionProblem.title,
+        description: searchInsertPositionProblem.description,
+        available: true,
       },
     ],
   },
