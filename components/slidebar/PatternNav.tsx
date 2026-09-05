@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronRight, LayoutGrid, Menu, Search, Sparkles } from "lucide-react";
+import { LayoutGrid, PanelLeftClose, PanelLeftOpen, Search, Sparkles, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useMemo, useState } from "react";
 import { patterns } from "@/data/patterns";
@@ -13,6 +13,7 @@ import { ProblemList } from "@/components/slidebar/ProblemList";
 export function PatternNav() {
 	const pathname = usePathname();
 	const [collapsed, setCollapsed] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	const activePatternSlug = useMemo(() => {
 		const segments = pathname.split("/").filter(Boolean);
@@ -23,6 +24,25 @@ export function PatternNav() {
 		const segments = pathname.split("/").filter(Boolean);
 		return segments[0] === "patterns" ? segments[2] : "three-sum";
 	}, [pathname]);
+
+	const filteredPatterns = useMemo(() => {
+		const query = searchQuery.trim().toLowerCase();
+
+		if (!query) {
+			return patterns;
+		}
+
+		return patterns
+			.map((pattern) => {
+				const patternMatches = `${pattern.name} ${pattern.description}`.toLowerCase().includes(query);
+				const matchingProblems = pattern.problems.filter((problem) =>
+					`${problem.title} ${problem.description}`.toLowerCase().includes(query),
+				);
+
+				return patternMatches ? pattern : { ...pattern, problems: matchingProblems };
+			})
+			.filter((pattern) => pattern.problems.length > 0);
+	}, [searchQuery]);
 
 	return (
 		<motion.aside
@@ -47,27 +67,56 @@ export function PatternNav() {
 				<button
 					type="button"
 					onClick={() => setCollapsed((value) => !value)}
-					className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900 text-zinc-300 transition-colors hover:border-zinc-700 hover:bg-zinc-800"
-					aria-label="Toggle sidebar"
+					className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-zinc-800 bg-zinc-900 text-zinc-300 transition-colors hover:border-zinc-700 hover:bg-zinc-800"
+					aria-controls="pattern-navigation"
+					aria-expanded={!collapsed}
+					aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+					title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
 				>
-					{collapsed ? <Menu className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+					{collapsed ? <PanelLeftOpen className="h-4 w-4" /> : <PanelLeftClose className="h-4 w-4" />}
 				</button>
 			</div>
 
 			<div className="border-b border-zinc-800/70 px-4 py-4 lg:px-5">
-				<div className={cn("flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/80 px-3 py-2", collapsed && "lg:justify-center")}>
+				<label
+					className={cn(
+						"flex items-center gap-3 rounded-2xl border border-zinc-800 bg-zinc-900/80 px-3 py-2 transition-colors focus-within:border-orange-500/50 focus-within:ring-2 focus-within:ring-orange-500/10",
+						collapsed && "lg:justify-center",
+					)}
+				>
 					<Search className="h-4 w-4 text-zinc-500" />
-					{!collapsed ? <span className="text-sm text-zinc-500">Search patterns</span> : null}
-				</div>
+					{!collapsed ? (
+						<>
+							<input
+								value={searchQuery}
+								onChange={(event) => setSearchQuery(event.target.value)}
+								placeholder="Search patterns"
+								aria-label="Search patterns and problems"
+								className="min-w-0 flex-1 bg-transparent text-sm text-zinc-100 outline-none placeholder:text-zinc-500"
+							/>
+							{searchQuery ? (
+								<button
+									type="button"
+									onClick={() => setSearchQuery("")}
+									className="rounded-full p-1 text-zinc-500 transition-colors hover:bg-zinc-800 hover:text-zinc-200"
+									aria-label="Clear search"
+									title="Clear search"
+								>
+									<X className="h-3.5 w-3.5" />
+								</button>
+							) : null}
+						</>
+					) : null}
+				</label>
 			</div>
 
-			<div className="flex-1 overflow-y-auto px-3 py-4 lg:px-4">
+			<div id="pattern-navigation" className="flex-1 overflow-y-auto px-3 py-4 lg:px-4">
 				<div className="mb-4 flex items-center gap-2 px-2 text-xs font-semibold uppercase tracking-[0.28em] text-zinc-500">
 					<LayoutGrid className="h-3.5 w-3.5" />
 					{!collapsed ? <span>Patterns</span> : null}
 				</div>
 				<div className="space-y-4">
-					{patterns.map((pattern) => (
+					{filteredPatterns.map((pattern) => (
 						<section key={pattern.slug} className="space-y-3 rounded-3xl border border-zinc-800 bg-zinc-900/60 p-3">
 							<div className={cn("flex items-center justify-between gap-3", collapsed && "lg:flex-col lg:items-start")}>
 								<div className="min-w-0">
@@ -86,6 +135,11 @@ export function PatternNav() {
 							) : null}
 						</section>
 					))}
+					{filteredPatterns.length === 0 ? (
+						<div className="rounded-2xl border border-dashed border-zinc-800 px-4 py-6 text-center text-sm text-zinc-500">
+							No patterns or problems match &quot;{searchQuery}&quot;.
+						</div>
+					) : null}
 				</div>
 			</div>
 		</motion.aside>
