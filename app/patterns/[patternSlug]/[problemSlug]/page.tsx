@@ -11,6 +11,7 @@ import { ArrayVisualizer } from "@/components/visualizer/ArrayVisualizer";
 import { CodePanel } from "@/components/visualizer/CodePanel";
 import { ComplexityCard } from "@/components/visualizer/ComplexityCard";
 import { Controls } from "@/components/visualizer/Controls";
+import { DequeVisualizer } from "@/components/visualizer/DequeVisualizer";
 import { HashMapVisualizer } from "@/components/visualizer/HashMapVisualizer";
 import { MessageDisplay } from "@/components/visualizer/MessageDisplay";
 import { StackVisualizer } from "@/components/visualizer/StackVisualizer";
@@ -106,6 +107,7 @@ export default function PatternProblemPage({ params }: PatternProblemPageProps) 
                 <ArrayVisualizer step={activeStep} />
               )}
 
+              {problem.visualization === "array-deque" ? <DequeVisualizer step={activeStep} /> : null}
               {problem.visualization === "array-hashmap" ? <HashMapVisualizer step={activeStep} /> : null}
             </div>
 
