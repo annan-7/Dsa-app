@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 import { PatternNav } from "@/components/slidebar/PatternNav";
+import { AuthControls } from "@/components/AuthControls";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -28,7 +29,10 @@ export default function RootLayout({
       <body className="min-h-full">
         <div className="flex min-h-screen flex-col bg-[radial-gradient(circle_at_top,_rgba(249,115,22,0.14),_transparent_34%),linear-gradient(180deg,_#09090b_0%,_#0a0a0b_45%,_#09090b_100%)] lg:flex-row">
           <PatternNav />
-          <div className="flex min-w-0 flex-1 flex-col">{children}</div>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <AuthControls />
+            {children}
+          </div>
         </div>
       </body>
     </html>
