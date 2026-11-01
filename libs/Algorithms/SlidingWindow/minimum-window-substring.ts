@@ -1,83 +1,92 @@
-import type { AlgorithmStep } from "@/libs/types";
+import { createTrace, windowState } from "../trace";
 
-const source = "ADOBECODEBANC";
-const target = "ABC";
-const chars = source.split("");
-
-function step(stepNumber: number, id: string, label: string, message: string, codeLine: number, action: AlgorithmStep["action"], left: number, right: number, windowLength: number): AlgorithmStep {
-	return {
-		stepNumber,
-		id,
-		label,
-		message,
-		codeLine,
-		action,
-		array: chars,
-		activeIndices: [left, right],
-		foundIndices: [],
-		pointers: { left, right },
-		windowRange: [left, right],
-		windowLength,
-	};
+function frequencies(target: string[]) {
+  const counts = new Map<string, number>();
+  for (const char of target) counts.set(char, (counts.get(char) ?? 0) + 1);
+  return counts;
 }
 
-export function generateMinimumWindowSubstringBruteForceSteps(): AlgorithmStep[] {
-	return [
-		{
-			stepNumber: 1,
-			id: "brute-start",
-			label: "Check all windows",
-			message: "Scan every substring until the shortest valid one is found.",
-			codeLine: 1,
-			action: "move",
-			array: chars,
-			activeIndices: [],
-			foundIndices: [],
-			pointers: {},
-		},
-		step(2, "brute-window", "Evaluate candidate", "The valid window 'BANC' is the shortest one found in this pass.", 2, "compare", 9, 12, 4),
-		step(3, "brute-found", "Shortest window found", "The answer is 'BANC'.", 3, "found", 9, 12, 4),
-	];
+export function generateMinimumWindowSubstringBruteForceSteps(source = "ADOBECODEBANC", target = "ABC") {
+  const chars = Array.from(source);
+  const requiredChars = Array.from(target);
+  const required = frequencies(requiredChars);
+  const { steps, add } = createTrace(chars);
+  let bestLeft = -1;
+  let bestLength = Infinity;
+  add(1, "Check every start", "Start a fresh frequency count at each left boundary.", { action: "move" });
+  if (requiredChars.length > 0) {
+    for (let left = 0; left < chars.length; left++) {
+      const counts = new Map<string, number>();
+      let matched = 0;
+      for (let right = left; right < chars.length; right++) {
+        const char = chars[right];
+        counts.set(char, (counts.get(char) ?? 0) + 1);
+        if ((counts.get(char) ?? 0) <= (required.get(char) ?? 0)) matched++;
+        add(2, "Extend candidate", `Include '${char}'; ${matched} of ${requiredChars.length} required characters are covered.`, {
+          ...windowState(left, right), action: "compare", variables: { matched, required: requiredChars.length },
+        });
+        if (matched === requiredChars.length) {
+          if (right - left + 1 < bestLength) {
+            bestLeft = left;
+            bestLength = right - left + 1;
+          }
+          add(3, "Complete candidate", "This is the shortest complete window for this start. Longer windows cannot improve it.", {
+            ...windowState(left, right), action: "found", variables: { bestLength },
+          });
+          break;
+        }
+      }
+    }
+  }
+  const result = bestLeft < 0 ? "" : chars.slice(bestLeft, bestLeft + bestLength).join("");
+  add(4, "Return minimum window", result ? `The shortest covering window is '${result}'.` : "Return an empty string: no nonempty covering window is required or available.", {
+    ...windowState(bestLeft, bestLeft < 0 ? -1 : bestLeft + bestLength - 1), action: result ? "found" : "skip", result,
+    variables: { bestLength: bestLeft < 0 ? 0 : bestLength },
+  });
+  return steps;
 }
 
-export function generateMinimumWindowSubstringOptimizedSteps(): AlgorithmStep[] {
-	const steps: AlgorithmStep[] = [];
-	let stepNumber = 1;
-	let left = 0;
-	let bestLeft = 0;
-	let bestRight = chars.length - 1;
-	let formed = 0;
-	const required = new Set(target.split("")).size;
-	const counts = new Map<string, number>();
-
-	steps.push(step(stepNumber++, "optimized-start", "Start sliding window", "Expand the right side until the window covers every target character.", 1, "move", 0, 0, 1));
-
-	for (let right = 0; right < chars.length; right += 1) {
-		const current = chars[right];
-		counts.set(current, (counts.get(current) ?? 0) + 1);
-		if (target.includes(current) && (counts.get(current) ?? 0) === 1) {
-			formed += 1;
-		}
-
-		steps.push(step(stepNumber++, `expand-${right}`, "Expand window", `Include '${current}' and look for a complete match.`, 2, "move", left, right, right - left + 1));
-
-		while (formed === required && left <= right) {
-			if (right - left < bestRight - bestLeft) {
-				bestLeft = left;
-				bestRight = right;
-				steps.push(step(stepNumber++, `best-${left}-${right}`, "Best window", `Window '${chars.slice(left, right + 1).join("")}' is the smallest valid span so far.`, 3, "found", left, right, right - left + 1));
-			}
-
-			const leftChar = chars[left];
-			counts.set(leftChar, (counts.get(leftChar) ?? 0) - 1);
-			if (target.includes(leftChar) && (counts.get(leftChar) ?? 0) === 0) {
-				formed -= 1;
-			}
-			steps.push(step(stepNumber++, `shrink-${left}`, "Shrink window", `Move left past '${leftChar}'.`, 4, "move", left, right, right - left + 1));
-			left += 1;
-		}
-	}
-
-	steps.push(step(stepNumber, "optimized-found", `Minimum window ${chars.slice(bestLeft, bestRight + 1).join("")}`, `The shortest valid window is '${chars.slice(bestLeft, bestRight + 1).join("")}'.`, 5, "found", bestLeft, bestRight, bestRight - bestLeft + 1));
-	return steps;
+export function generateMinimumWindowSubstringOptimizedSteps(source = "ADOBECODEBANC", target = "ABC") {
+  const chars = Array.from(source);
+  const requiredChars = Array.from(target);
+  const required = frequencies(requiredChars);
+  const counts = new Map<string, number>();
+  const { steps, add } = createTrace(chars);
+  let left = 0;
+  let matched = 0;
+  let bestLeft = -1;
+  let bestLength = Infinity;
+  add(1, "Initialize window", "Track required character frequencies, including duplicates.", { action: "move" });
+  if (requiredChars.length > 0) {
+    for (let right = 0; right < chars.length; right++) {
+      const char = chars[right];
+      counts.set(char, (counts.get(char) ?? 0) + 1);
+      if ((counts.get(char) ?? 0) <= (required.get(char) ?? 0)) matched++;
+      add(2, "Expand window", `Include '${char}'; ${matched} of ${requiredChars.length} required characters are covered.`, {
+        ...windowState(left, right), action: "move", variables: { matched, required: requiredChars.length },
+      });
+      while (matched === requiredChars.length) {
+        if (right - left + 1 < bestLength) {
+          bestLeft = left;
+          bestLength = right - left + 1;
+        }
+        add(3, "Record valid window", "All target frequencies are covered. Record the best length before shrinking.", {
+          ...windowState(left, right), action: "found", variables: { bestLength, matched },
+        });
+        const leaving = chars[left];
+        counts.set(leaving, (counts.get(leaving) ?? 0) - 1);
+        if ((counts.get(leaving) ?? 0) < (required.get(leaving) ?? 0)) matched--;
+        left++;
+        add(4, "Shrink window", `Remove '${leaving}' and advance left. ${matched} required characters remain covered.`, {
+          ...windowState(left, right), action: "move", variables: { left, matched, bestLength },
+        });
+      }
+    }
+  }
+  const result = bestLeft < 0 ? "" : chars.slice(bestLeft, bestLeft + bestLength).join("");
+  add(5, "Return minimum window", result ? `The shortest covering window is '${result}'.` : "Return an empty string: no nonempty covering window is required or available.", {
+    ...windowState(bestLeft, bestLeft < 0 ? -1 : bestLeft + bestLength - 1), action: result ? "found" : "skip", result,
+    variables: { bestLength: bestLeft < 0 ? 0 : bestLength },
+  });
+  return steps;
 }

@@ -5,17 +5,17 @@ import {
 } from "@/libs/Algorithms/TwoPointer/container-with-most-water";
 
 const brutePseudocode = [
-	"for left in range(0, n - 1):",
-	"  for right in range(left + 1, n):",
-	"    area = min(height[left], height[right]) * (right - left)",
-	"    update best area",
+  "initialize best = 0",
+  "for every pair: calculate area and update best",
+  "return best area"
 ];
 
 const optimizedPseudocode = [
-	"left = 0, right = n - 1",
-	"while left < right:",
-	"  area = min(height[left], height[right]) * width",
-	"  move shorter wall inward",
+  "left = 0; right = n - 1; best = 0",
+  "while left < right: calculate area and update best",
+  "  if left wall is shorter: advance left",
+  "  otherwise: decrease right",
+  "return best area"
 ];
 
 export const containerWithMostWaterProblem: ProblemDefinition = {

@@ -2,14 +2,16 @@ import type { ProblemDefinition } from "@/libs/types";
 import { generateProductExceptSelfBruteForceSteps, generateProductExceptSelfOptimizedSteps } from "@/libs/Algorithms/Array&Hashing/product-of-array-except-self";
 
 const brutePseudocode = [
-	"for i in range(0, n):",
-	"  result[i] = product of all nums except nums[i]",
+  "for each output index",
+  "  multiply all values at other indices",
+  "return all products"
 ];
 
 const optimizedPseudocode = [
-	"prefix pass from left to right",
-	"suffix pass from right to left",
-	"result[i] = prefix * suffix",
+  "initialize output to ones",
+  "scan left to right: store prefix; update prefix",
+  "scan right to left: multiply suffix; update suffix",
+  "return output"
 ];
 
 export const productOfArrayExceptSelfProblem: ProblemDefinition = {

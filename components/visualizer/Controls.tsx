@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/Button";
 import { cn } from "@/libs/utiles";
 
 interface ControlsProps {
+	canPrev?: boolean;
+	canNext?: boolean;
+	canPlay?: boolean;
 	isPlaying: boolean;
 	speed: number;
 	onPlayPause: () => void;
@@ -18,6 +21,7 @@ interface ControlsProps {
 const speedOptions = [0.75, 1, 1.5, 2];
 
 export function Controls({
+	canPrev = true, canNext = true, canPlay = true,
 	isPlaying,
 	speed,
 	onPlayPause,
@@ -29,15 +33,15 @@ export function Controls({
 	return (
 		<div className="flex flex-col gap-4 rounded-2xl border border-zinc-800 bg-zinc-950/80 p-4 xl:flex-row xl:items-center xl:justify-between">
 			<div className="flex flex-wrap items-center gap-3">
-				<Button variant="primary" onClick={onPlayPause}>
+				<Button variant="primary" onClick={onPlayPause} disabled={!canPlay}>
 					{isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
 					{isPlaying ? "Pause" : "Play"}
 				</Button>
-				<Button variant="secondary" onClick={onPrev}>
+				<Button variant="secondary" onClick={onPrev} disabled={!canPrev}>
 					<SkipBack className="h-4 w-4" />
 					Step back
 				</Button>
-				<Button variant="secondary" onClick={onNext}>
+				<Button variant="secondary" onClick={onNext} disabled={!canNext}>
 					<SkipForward className="h-4 w-4" />
 					Step forward
 				</Button>
@@ -57,6 +61,7 @@ export function Controls({
 							<motion.button
 								key={option}
 								type="button"
+								aria-pressed={active}
 								whileTap={{ scale: 0.95 }}
 								onClick={() => onSpeedChange(option)}
 								className={cn(

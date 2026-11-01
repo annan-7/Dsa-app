@@ -26,7 +26,7 @@ export function generateSlidingWindowMaximumBruteForceSteps(): AlgorithmStep[] {
 	const steps: AlgorithmStep[] = [
 		makeStep(1, "brute-start", "Check every window", "Inspect each window of length 3 and scan it for the largest value.", 1, "move", 0, 0, []),
 	];
-	let bestValues: number[] = [];
+	const bestValues: number[] = [];
 
 	for (let left = 0; left <= numbers.length - windowSize; left += 1) {
 		const right = left + windowSize - 1;

@@ -18,7 +18,7 @@ An interactive step-by-step visualization platform for Data Structures and Algor
 
 ##  Tech Stack
 
-- **Framework**: Next.js 14 (App Router)
+- **Framework**: Next.js 16 (App Router)
 - **Language**: TypeScript
 - **Styling**: Tailwind CSS
 - **Animations**: Framer Motion
@@ -29,7 +29,7 @@ An interactive step-by-step visualization platform for Data Structures and Algor
 
 ### Prerequisites
 
-- Node.js 18+
+- Node.js 22.13+
 - npm 9+
 
 ### Installation
@@ -78,3 +78,15 @@ Contributions are welcome! To contribute:
 
 **Made by Annan John for developers learning DSA**  
 *See the magic behind the algorithms*
+
+## Authentication
+
+GitHub sign-in uses NextAuth.js. Follow [the free setup guide](docs/authentication.md) to create OAuth credentials and configure local or production login. The home page and sign-in flow remain public. All other content pages require a server-validated session.
+
+## Validation
+
+- `npm test`: algorithm edge cases, exhaustive small-input oracles, visualization invariants, and playback regressions.
+- `npm run typecheck` and `npm run lint`: static checks.
+- `npm run build`: production build using webpack.
+- `npm run test:auth`: starts an isolated production server with temporary test credentials, checks route protection and sessions, then stops it. Run the build first.
+- `npm audit --omit=dev`: production dependency audit.

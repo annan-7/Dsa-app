@@ -2,14 +2,18 @@ import type { ProblemDefinition } from "@/libs/types";
 import { generateMinimumWindowSubstringBruteForceSteps, generateMinimumWindowSubstringOptimizedSteps } from "@/libs/Algorithms/SlidingWindow/minimum-window-substring";
 
 const brutePseudocode = [
-	"check every substring",
-	"keep the shortest one that covers target",
+  "for each left: reset counts and matched",
+  "  extend right; update counts and matched",
+  "  if covered: update best and stop this start",
+  "return shortest window or empty string"
 ];
 
 const optimizedPseudocode = [
-	"expand right until target is covered",
-	"shrink left while still valid",
-	"record the smallest valid window",
+  "left = matched = 0; count required characters",
+  "for each right: add character and update matched",
+  "  while covered: record shortest window",
+  "    remove left character; advance left",
+  "return shortest window or empty string"
 ];
 
 export const minimumWindowSubstringProblem: ProblemDefinition = {
@@ -23,6 +27,6 @@ export const minimumWindowSubstringProblem: ProblemDefinition = {
 	defaultMode: "optimized",
 	visualization: "array",
 	pseudocode: { brute: brutePseudocode, optimized: optimizedPseudocode },
-	complexity: { brute: { time: "O(n^3)", space: "O(n)", detail: "Every substring is validated against the target set." }, optimized: { time: "O(n)", space: "O(n)", detail: "The sliding window expands and contracts once per character on average." } },
+	complexity: { brute: { time: "O(n² + m)", space: "O(n + m)", detail: "Each start extends a candidate while incrementally tracking coverage, including duplicate target characters." }, optimized: { time: "O(n + m)", space: "O(n + m)", detail: "Each source character enters and leaves once; initializing target frequencies costs O(m)." } },
 	steps: { brute: generateMinimumWindowSubstringBruteForceSteps(), optimized: generateMinimumWindowSubstringOptimizedSteps() },
 };

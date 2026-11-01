@@ -5,17 +5,17 @@ import {
 } from "@/libs/Algorithms/BinarySearch/search-insert-position";
 
 const brutePseudocode = [
-	"for index in range(0, n):",
-	"  if nums[index] >= target: return index",
+  "initialize linear scan",
+  "for each index: compare value with target",
+  "  if value >= target: return index"
 ];
 
 const optimizedPseudocode = [
-	"left = 0, right = n - 1",
-	"while left <= right:",
-	"  mid = (left + right) // 2",
-	"  if nums[mid] < target: left = mid + 1",
-	"  else: right = mid - 1",
-	"return left",
+  "left = 0; right = n - 1",
+  "while left <= right: inspect midpoint",
+  "  if value == target: return midpoint",
+  "  move the appropriate bound past midpoint",
+  "return left as insertion index"
 ];
 
 export const searchInsertPositionProblem: ProblemDefinition = {

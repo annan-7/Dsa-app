@@ -1,4 +1,4 @@
-import type { AlgorithmStep, DequeEntry } from "@/libs/types";
+import type { AlgorithmStep } from "@/libs/types";
 
 const numbers = [8, 2, 4, 7];
 const limit = 4;

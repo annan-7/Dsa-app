@@ -5,19 +5,18 @@ import {
 } from "@/libs/Algorithms/SlidingWindow/longest-repeating-character-replacement";
 
 const brutePseudocode = [
-	"for left in range(0, n):",
-	"  for right in range(left + 1, n):",
-	"    if replacements_needed(window) <= k: update best",
+  "for each left: reset counts and maximum frequency",
+  "  for each right: add character; calculate replacements",
+  "    if replacements <= k: update best window",
+  "return best length"
 ];
 
 const optimizedPseudocode = [
-	"left = 0",
-	"counts = {}",
-	"for right in range(0, n):",
-	"  add s[right] to counts",
-	"  while window has too many replacements:",
-	"    remove s[left] and move left",
-	"  update best",
+  "left = best = 0; counts = empty map",
+  "for each right: add character; find maximum frequency",
+  "  while invalid: remove left; advance; recompute maximum",
+  "  update best valid window",
+  "return best length"
 ];
 
 export const longestRepeatingCharacterReplacementProblem: ProblemDefinition = {
@@ -35,8 +34,8 @@ export const longestRepeatingCharacterReplacementProblem: ProblemDefinition = {
 		optimized: optimizedPseudocode,
 	},
 	complexity: {
-		brute: { time: "O(n^2)", space: "O(1)", detail: "Every possible window is assessed independently." },
-		optimized: { time: "O(n)", space: "O(1)", detail: "The window expands and shrinks in constant additional work per step." },
+		brute: { time: "O(n^2)", space: "O(1)", detail: "Each start builds counts incrementally across all endings; at most 26 uppercase letters are tracked." },
+		optimized: { time: "O(n)", space: "O(1)", detail: "Recompute the true maximum across at most 26 uppercase letters after each removal; both pointers move forward." },
 	},
 	steps: {
 		brute: generateLongestRepeatingCharacterReplacementBruteForceSteps(),

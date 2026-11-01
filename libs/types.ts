@@ -4,7 +4,7 @@ export type PointerKey = "i" | "j" | "k" | "left" | "right";
 
 export type AlgorithmAction = "move" | "compare" | "calculate" | "found" | "skip";
 
-export type VisualizationKind = "array" | "array-hashmap" | "stack";
+export type VisualizationKind = "array" | "array-hashmap" | "array-deque" | "stack";
 
 export interface HashMapEntry {
 	key: string;
@@ -14,7 +14,18 @@ export interface HashMapEntry {
 	matched?: boolean;
 }
 
+export interface DequeEntry {
+	index: number;
+	value: number;
+	role?: "min" | "max";
+}
+
 export interface AlgorithmStep {
+	variables?: Record<string, string | number | boolean>;
+	result?: string | number | boolean;
+	deque?: DequeEntry[];
+	maxDeque?: DequeEntry[];
+	minDeque?: DequeEntry[];
 	stepNumber?: number;
 	id: string;
 	label: string;

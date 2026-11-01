@@ -1,59 +1,43 @@
-import type { AlgorithmStep } from "@/libs/types";
+import { createTrace } from "../trace";
 
-const left = "anagram";
-const right = "nagaram";
-const chars = `${left} | ${right}`.split("");
-
-function createStep(
-	stepNumber: number,
-	id: string,
-	label: string,
-	message: string,
-	codeLine: number,
-	action: AlgorithmStep["action"],
-	activeIndices: number[],
-	pointers: AlgorithmStep["pointers"] = {},
-): AlgorithmStep {
-	return {
-		stepNumber,
-		id,
-		label,
-		message,
-		codeLine,
-		action,
-		array: chars,
-		activeIndices,
-		foundIndices: [],
-		pointers,
-	};
+export function generateValidAnagramBruteForceSteps(left = "anagram", right = "nagaram") {
+  const first = Array.from(left).sort();
+  const second = Array.from(right).sort();
+  const { steps, add } = createTrace([...first, "|", ...second]);
+  add(1, "Sort both strings", "Arrange both character lists in the same order, preserving duplicate letters.", { action: "calculate" });
+  let result = first.length === second.length;
+  add(2, "Compare lengths", result ? "Lengths match; compare corresponding sorted letters." : "Different lengths cannot be anagrams.", { action: "compare" });
+  if (result) {
+    for (let index = 0; index < first.length; index++) {
+      const matches = first[index] === second[index];
+      add(3, "Compare sorted characters", `'${first[index]}' ${matches ? "matches" : "differs from"} '${second[index]}'.`, {
+        action: "compare", activeIndices: [index, first.length + 1 + index], pointers: { i: index, j: first.length + 1 + index },
+      });
+      if (!matches) { result = false; break; }
+    }
+  }
+  add(4, "Return anagram check", result ? "Every sorted character matches: these strings are anagrams." : "The strings have different character frequencies.", { action: result ? "found" : "skip", result });
+  return steps;
 }
 
-export function generateValidAnagramBruteForceSteps(): AlgorithmStep[] {
-	return [
-		createStep(1, "brute-start", "Compare character sets", "Sort both strings and compare them character by character.", 1, "move", []),
-		createStep(2, "brute-compare", "Check frequency", "The strings are compared after their letters are arranged into a common order.", 2, "compare", [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]),
-		createStep(3, "brute-found", "Anagrams match", "The sorted character lists match exactly, so the strings are anagrams.", 3, "found", [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]),
-	];
-}
-
-export function generateValidAnagramOptimizedSteps(): AlgorithmStep[] {
-	const steps: AlgorithmStep[] = [
-		createStep(1, "optimized-start", "Count characters", "Build frequency counts for both strings and compare the totals.", 1, "move", []),
-	];
-
-	const counts = new Map<string, number>();
-	for (let index = 0; index < left.length; index += 1) {
-		const char = left[index];
-		counts.set(char, (counts.get(char) ?? 0) + 1);
-		steps.push(createStep(steps.length + 1, `count-left-${index}`, `Count ${char}`, `Add ${char} to the left-side frequency table.`, 2, "move", [index]));
-	}
-
-	for (let index = 0; index < right.length; index += 1) {
-		const char = right[index];
-		counts.set(char, (counts.get(char) ?? 0) - 1);
-		steps.push(createStep(steps.length + 1, `count-right-${index}`, `Count ${char}`, `Subtract ${char} from the shared frequency table.`, 3, "compare", [left.length + 2 + index]));
-	}
-
-	steps.push(createStep(steps.length + 1, "optimized-found", "Balances are zero", "Every character count ends at zero, so the strings are anagrams.", 4, "found", [0, 1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 13]));
-	return steps;
+export function generateValidAnagramOptimizedSteps(left = "anagram", right = "nagaram") {
+  const first = Array.from(left);
+  const second = Array.from(right);
+  const { steps, add } = createTrace([...first, "|", ...second]);
+  const counts = new Map<string, number>();
+  const snapshot = () => [...counts].map(([key, value]) => ({ key, value: String(value) }));
+  add(1, "Initialize balances", "Add counts from the first string and subtract counts from the second.", { action: "move" });
+  for (let index = 0; index < first.length; index++) {
+    const char = first[index];
+    counts.set(char, (counts.get(char) ?? 0) + 1);
+    add(2, "Increment frequency", `Add '${char}'; its balance is ${counts.get(char)}.`, { action: "calculate", activeIndices: [index], hashMap: snapshot() });
+  }
+  for (let index = 0; index < second.length; index++) {
+    const char = second[index];
+    counts.set(char, (counts.get(char) ?? 0) - 1);
+    add(3, "Decrement frequency", `Subtract '${char}'; its balance is ${counts.get(char)}.`, { action: "calculate", activeIndices: [first.length + 1 + index], hashMap: snapshot() });
+  }
+  const result = [...counts.values()].every(count => count === 0);
+  add(4, "Return balance check", result ? "Every balance is zero: these strings are anagrams." : "A nonzero balance proves the strings are not anagrams.", { action: result ? "found" : "skip", result, hashMap: snapshot() });
+  return steps;
 }

@@ -4,7 +4,7 @@ const numbers = [1, 5, 4, 2, 9, 9, 9];
 const k = 3;
 
 function makeStep(stepNumber: number, id: string, label: string, message: string, codeLine: number, action: AlgorithmStep["action"], left: number, right: number, sum: number): AlgorithmStep {
-	return { stepNumber, id, label, message, codeLine, action, array: numbers, activeIndices: [left, right], foundIndices: action === "found" ? [left, right] : [], pointers: { left, right }, windowRange: [left, right], windowLength: k };
+	return { variables: { sum }, stepNumber, id, label, message, codeLine, action, array: numbers, activeIndices: [left, right], foundIndices: action === "found" ? [left, right] : [], pointers: { left, right }, windowRange: [left, right], windowLength: k };
 }
 
 export function generateMaximumSumOfDistinctSubarraysBruteForceSteps(): AlgorithmStep[] {

@@ -5,18 +5,17 @@ import {
 } from "@/libs/Algorithms/Array&Hashing/valid-anagram";
 
 const brutePseudocode = [
-	"sortedLeft = sort(s)",
-	"sortedRight = sort(t)",
-	"return sortedLeft == sortedRight",
+  "sort both character lists",
+  "if lengths differ: result = false",
+  "else: compare corresponding sorted characters",
+  "return whether all characters match"
 ];
 
 const optimizedPseudocode = [
-	"counts = {}",
-	"for char in s:",
-	"  counts[char] += 1",
-	"for char in t:",
-	"  counts[char] -= 1",
-	"return all(counts.values() == 0)",
+  "counts = empty map",
+  "for char in s: counts[char] += 1",
+  "for char in t: counts[char] -= 1",
+  "return whether every balance is zero"
 ];
 
 export const validAnagramProblem: ProblemDefinition = {

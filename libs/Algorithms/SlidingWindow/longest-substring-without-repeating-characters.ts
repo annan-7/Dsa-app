@@ -1,68 +1,63 @@
-import type { AlgorithmStep } from "@/libs/types";
+import { createTrace, windowState } from "../trace";
 
-const text = "abcabcbb";
-const chars = text.split("");
-
-function makeStep(stepNumber: number, id: string, label: string, message: string, codeLine: number, action: AlgorithmStep["action"], left: number, right: number, windowLength: number): AlgorithmStep {
-	return {
-		stepNumber,
-		id,
-		label,
-		message,
-		codeLine,
-		action,
-		array: chars,
-		activeIndices: [left, right],
-		foundIndices: [],
-		pointers: { left, right },
-		windowRange: [left, right],
-		windowLength,
-	};
+export function generateLongestSubstringBruteForceSteps(source = "abcabcbb") {
+  const chars = Array.from(source);
+  const { steps, add } = createTrace(chars);
+  let best = 0;
+  let bestLeft = -1;
+  add(1, "Try every start", "Create a fresh set for each starting index.", { action: "move" });
+  for (let left = 0; left < chars.length; left++) {
+    const seen = new Set<string>();
+    for (let right = left; right < chars.length; right++) {
+      const duplicate = seen.has(chars[right]);
+      add(2, duplicate ? "Duplicate found" : "Check next character", duplicate
+        ? `'${chars[right]}' repeats. Every longer window from this start also repeats, so stop.`
+        : `'${chars[right]}' is new in this candidate.`, { ...windowState(left, right), action: "compare" });
+      if (duplicate) break;
+      seen.add(chars[right]);
+      if (right - left + 1 > best) {
+        best = right - left + 1;
+        bestLeft = left;
+      }
+      add(3, "Update best length", `This unique window has length ${right - left + 1}; best is ${best}.`, {
+        ...windowState(left, right), action: "calculate", variables: { best },
+      });
+    }
+  }
+  add(4, "Return longest length", `The longest substring without repeated characters has length ${best}.`, {
+    ...windowState(bestLeft, bestLeft + best - 1), action: "found", result: best, variables: { best },
+  });
+  return steps;
 }
 
-export function generateLongestSubstringBruteForceSteps(): AlgorithmStep[] {
-	const steps: AlgorithmStep[] = [
-		{
-			stepNumber: 1,
-			id: "brute-start",
-			label: "Check every start",
-			message: "Expand each substring and stop when a repeated character appears.",
-			codeLine: 1,
-			action: "move",
-			array: chars,
-			activeIndices: [],
-			foundIndices: [],
-			pointers: {},
-		},
-	];
-
-	steps.push(makeStep(2, "brute-window", "Evaluate substring", "The longest unique substring discovered in this pass is 'abc'.", 2, "compare", 0, 2, 3));
-	steps.push(makeStep(3, "brute-found", "Best length found", "The maximum window length is 3.", 3, "found", 0, 2, 3));
-	return steps;
-}
-
-export function generateLongestSubstringOptimizedSteps(): AlgorithmStep[] {
-	const steps: AlgorithmStep[] = [];
-	let stepNumber = 1;
-	const seen = new Map<string, number>();
-	let left = 0;
-	let best = 0;
-
-	steps.push(makeStep(stepNumber++, "optimized-start", "Start sliding window", "Grow the window while removing duplicate characters from the left.", 1, "move", 0, 0, 1));
-
-	for (let right = 0; right < chars.length; right += 1) {
-		const current = chars[right];
-		if (seen.has(current) && (seen.get(current) ?? 0) >= left) {
-			const duplicateIndex = seen.get(current) ?? left;
-			steps.push(makeStep(stepNumber++, `duplicate-${right}`, "Duplicate found", `Move left past the previous '${current}'.`, 2, "compare", left, right, right - left + 1));
-			left = duplicateIndex + 1;
-		}
-
-		seen.set(current, right);
-		best = Math.max(best, right - left + 1);
-		steps.push(makeStep(stepNumber++, `expand-${right}`, "Expand window", `Window '${chars.slice(left, right + 1).join("")}' has length ${right - left + 1}.`, 3, "move", left, right, right - left + 1));
-	}
-
-	steps.push(makeStep(stepNumber, "optimized-found", `Longest length ${best}`, "The longest substring without repeating characters has length 3.", 4, "found", 0, chars.length - 1, best));
-	return steps;
+export function generateLongestSubstringOptimizedSteps(source = "abcabcbb") {
+  const chars = Array.from(source);
+  const { steps, add } = createTrace(chars);
+  const seen = new Map<string, number>();
+  let left = 0;
+  let best = 0;
+  let bestLeft = -1;
+  add(1, "Initialize window", "Remember each character's latest index to skip duplicates.", { action: "move" });
+  for (let right = 0; right < chars.length; right++) {
+    const previous = seen.get(chars[right]);
+    add(2, "Inspect character", `Inspect '${chars[right]}' at index ${right}.`, { ...windowState(left, right), action: "compare" });
+    if (previous !== undefined && previous >= left) {
+      left = previous + 1;
+      add(3, "Skip duplicate", `Move left past the previous '${chars[right]}' at ${previous}. The window is unique again.`, {
+        ...windowState(left, right), action: "move", variables: { left, previous },
+      });
+    }
+    seen.set(chars[right], right);
+    if (right - left + 1 > best) {
+      best = right - left + 1;
+      bestLeft = left;
+    }
+    add(4, "Update best length", `Remember index ${right}. Current length is ${right - left + 1}; best is ${best}.`, {
+      ...windowState(left, right), action: "calculate", variables: { best },
+    });
+  }
+  add(5, "Return longest length", `The longest substring without repeated characters has length ${best}.`, {
+    ...windowState(bestLeft, bestLeft + best - 1), action: "found", result: best, variables: { best },
+  });
+  return steps;
 }

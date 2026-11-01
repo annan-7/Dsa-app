@@ -5,17 +5,19 @@ import {
 } from "@/libs/Algorithms/TwoPointer/valid-palindrome";
 
 const brutePseudocode = [
-	"clean = filter alphanumeric chars",
-	"return clean == reverse(clean)",
+  "clean = lowercase alphanumeric characters",
+  "reversed = reverse a copy of clean",
+  "compare each clean character with reversed",
+  "return whether every comparison matched"
 ];
 
 const optimizedPseudocode = [
-	"left = 0, right = n - 1",
-	"while left < right:",
-	"  skip non-alphanumeric characters",
-	"  compare chars[left] and chars[right]",
-	"  if mismatch: return false",
-	"  move both pointers inward",
+  "left = 0; right = n - 1",
+  "while left < right: skip non-alphanumeric characters",
+  "  compare lowercase characters at both pointers",
+  "  if mismatch: return false",
+  "  advance both pointers inward",
+  "return true"
 ];
 
 export const validPalindromeProblem: ProblemDefinition = {

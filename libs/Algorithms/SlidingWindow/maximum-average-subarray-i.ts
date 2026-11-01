@@ -4,7 +4,7 @@ const numbers = [1, 12, -5, -6, 50, 3];
 const k = 4;
 
 function makeStep(stepNumber: number, id: string, label: string, message: string, codeLine: number, action: AlgorithmStep["action"], left: number, right: number, sum: number): AlgorithmStep {
-	return { stepNumber, id, label, message, codeLine, action, array: numbers, activeIndices: [left, right], foundIndices: [], pointers: { left, right }, windowRange: [left, right], windowLength: right - left + 1, currentIndex: right, };
+	return { variables: { sum }, stepNumber, id, label, message, codeLine, action, array: numbers, activeIndices: [left, right], foundIndices: [], pointers: { left, right }, windowRange: [left, right], windowLength: right - left + 1, currentIndex: right, };
 }
 
 export function generateMaximumAverageSubarrayIBruteForceSteps(): AlgorithmStep[] {

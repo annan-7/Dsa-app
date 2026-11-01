@@ -5,16 +5,17 @@ import {
 } from "@/libs/Algorithms/Array&Hashing/contains-duplicate";
 
 const brutePseudocode = [
-	"for i in range(0, n - 1):",
-	"  for j in range(i + 1, n):",
-	"    if nums[i] == nums[j]: return true",
+  "for every pair of distinct indices",
+  "  compare their values",
+  "  if equal: return true",
+  "  otherwise: continue scanning"
 ];
 
 const optimizedPseudocode = [
-	"seen = {}",
-	"for num in nums:",
-	"  if num in seen: return true",
-	"  seen[num] = index",
+  "initialize seen map",
+  "for each value: check seen",
+  "  if present: return true",
+  "  otherwise: store current index"
 ];
 
 export const containsDuplicateProblem: ProblemDefinition = {

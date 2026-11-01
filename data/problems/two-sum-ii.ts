@@ -7,19 +7,20 @@ import {
 } from "@/libs/Algorithms/TwoPointer/two-sum-ii";
 
 const brutePseudocode = [
-	"for i in range(0, n - 1):",
-	"  for j in range(i + 1, n):",
-	"    sum = numbers[i] + numbers[j]",
-	"    if sum == target: return pair",
+  "initialize pair scan",
+  "for each i: fix first index",
+  "  for each j > i: compare pair with target",
+  "    sum = nums[i] + nums[j]",
+  "    record matching pair or skip"
 ];
 
 const optimizedPseudocode = [
-	"left = 0, right = n - 1",
-	"while left < right:",
-	"  sum = numbers[left] + numbers[right]",
-	"  if sum == target: return pair",
-	"  if sum < target: left += 1",
-	"  else: right -= 1",
+  "left = 0; right = n - 1",
+  "while left < right: inspect current pair",
+  "  sum = nums[left] + nums[right]",
+  "  if sum == target: return pair",
+  "  if sum < target: advance left",
+  "  otherwise: decrease right"
 ];
 
 export const twoSumIIProblem: ProblemDefinition = {

@@ -2,16 +2,18 @@ import type { ProblemDefinition } from "@/libs/types";
 import { generateLongestSubstringBruteForceSteps, generateLongestSubstringOptimizedSteps } from "@/libs/Algorithms/SlidingWindow/longest-substring-without-repeating-characters";
 
 const brutePseudocode = [
-	"for each start position:",
-	"  expand until a duplicate appears",
-	"  track the best length",
+  "for each left: seen = empty set",
+  "  for each right: stop if character repeats",
+  "    add character; update best length",
+  "return best length"
 ];
 
 const optimizedPseudocode = [
-	"left = 0",
-	"for right in range(0, n):",
-	"  if char already in window: move left",
-	"  update best length",
+  "left = best = 0; lastSeen = empty map",
+  "for each right: inspect character",
+  "  if duplicate in window: left = lastSeen + 1",
+  "  store index and update best length",
+  "return best length"
 ];
 
 export const longestSubstringWithoutRepeatingCharactersProblem: ProblemDefinition = {
